@@ -1,0 +1,10 @@
+This plugin will deliberately break the Java SSL security model.
+It is useful for working in development environments or test
+environments where you have a generated SSL certificate. Notice
+one of the modules detects the Grails test mode and reads the
+Grails generated SSL cert and provides an SSL exception for it.
+
+NOTE: This is a sketch. I have not tested this.
+the POJO you want are in:
+WeakSSL / src / java / com / blogspot / hartsock / ssl / weak
+-- Shawn Hartsock
