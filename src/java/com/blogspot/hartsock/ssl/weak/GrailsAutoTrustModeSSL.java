@@ -13,9 +13,9 @@ import java.security.Security;
  * Fixes:
  * sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
  */
-public class GrailsDevModeSSL {
+public class GrailsAutoTrustModeSSL {
 
-    public static void init() throws Exception {
+    public static void init() {
         if(Environment.getCurrent() == Environment.PRODUCTION) return;
         System.out.println("Development/Testing mode detected, attempting to pull in generated certificate");
 
