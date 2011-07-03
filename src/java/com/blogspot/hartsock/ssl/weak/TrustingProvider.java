@@ -1,13 +1,12 @@
 package com.blogspot.hartsock.ssl.weak;
 
-import grails.util.GrailsUtil;
-
 import javax.net.ssl.ManagerFactoryParameters;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactorySpi;
 import javax.net.ssl.X509TrustManager;
 import java.security.KeyStore;
 import java.security.Provider;
+import java.security.Security;
 import java.security.cert.X509Certificate;
 
 /**
@@ -16,9 +15,6 @@ import java.security.cert.X509Certificate;
 public class TrustingProvider  extends Provider {
     public TrustingProvider() {
       super( "TrustingProvider", 1.0, "Trust certificates" );
-      if(!GrailsUtil.isDevelopmentEnv()) {
-          System.out.println("You are using the TrustingProvider in PRODUCTION!");
-      }
       put( "TrustManagerFactory.TrustAllCertificates",
          TrustingTrustManagerFactory.class.getName() );
    }
@@ -34,6 +30,7 @@ public class TrustingProvider  extends Provider {
          };
       }
    }
+
    protected static class TrustingX509TrustManager
          implements X509TrustManager {
       public void checkClientTrusted(
@@ -44,4 +41,18 @@ public class TrustingProvider  extends Provider {
          return null;
       }
    }
+
+   /**
+    * Registers this All Trusting provider as
+    * this JVM's provider.
+    */
+   public synchronized static void registerTrustingProvider() {
+      // Install the all-trusting trust manager
+      Security.addProvider(new TrustingProvider());
+      Security.setProperty(
+         "ssl.TrustManagerFactory.algorithm",
+         "TrustAllCertificates"
+      );
+   }
+
 }

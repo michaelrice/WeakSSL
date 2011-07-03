@@ -1,6 +1,6 @@
-import com.blogspot.hartsock.ssl.weak.GrailsDevModeSSL
+import com.blogspot.hartsock.ssl.weak.GrailsAutoTrustModeSSL
 import org.codehaus.groovy.grails.commons.GrailsApplication
-import com.blogspot.hartsock.ssl.weak.WeakHostnameVerifier
+import com.blogspot.hartsock.ssl.weak.WeakSSLService
 
 class WeakSSLGrailsPlugin {
     // the plugin version
@@ -31,9 +31,19 @@ any SSL certificate.
     }
 
     def doWithSpring = {
-        if(application.config.weakssl?.trustedhosts) {
-            String[] trustedhosts = application.config.weakssl.trustedhosts.toArray()
-            WeakHostnameVerifier.init(trustedhosts)
+        def trustedHosts = ['localhost']
+        if(application.config.weakssl?.trustedhosts instanceof List) {
+            trustedHosts =  application.config.weakssl?.trustedhosts
+        }
+        def autoTrustMode = true
+        if(application.config.weakssl?.autoTrust == false) {
+            autoTrustMode = false
+        }
+        def trustAll = application.config.weakssl?.trustAll?:false
+        weakSSLService(WeakSSLService) {
+            trustedHosts = trustedHosts
+            autoTrustMode = autoTrustMode
+            trustAll = trustAll
         }
     }
 
@@ -56,9 +66,9 @@ any SSL certificate.
     }
 
     void configSSLMode(GrailsApplication application) {
-        def trustAll = (application.config?.trustAll == null) ? true : application.config?.trustAll
+        def trustAll = application.config?.trustAll
         if (trustAll) {
-            GrailsDevModeSSL.init()
+            GrailsAutoTrustModeSSL.init()
         }
     }
 
