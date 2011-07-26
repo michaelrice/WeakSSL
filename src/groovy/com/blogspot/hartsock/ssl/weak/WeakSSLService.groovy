@@ -1,7 +1,6 @@
 package com.blogspot.hartsock.ssl.weak
 
 import org.springframework.beans.factory.InitializingBean
-import java.security.Security
 import grails.util.Environment
 
 class WeakSSLService implements InitializingBean {

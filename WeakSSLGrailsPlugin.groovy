@@ -4,7 +4,7 @@ import com.blogspot.hartsock.ssl.weak.WeakSSLService
 
 class WeakSSLGrailsPlugin {
     // the plugin version
-    def version = "0.1"
+    def version = "1.0"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.6 > *"
     // the other plugins this plugin depends on
@@ -36,7 +36,7 @@ any SSL certificate.
             trustedHosts =  application.config.weakssl?.trustedhosts
         }
         def autoTrustMode = true
-        if(application.config.weakssl?.autoTrust == false) {
+        if(!application.config.weakssl?.autoTrust) {
             autoTrustMode = false
         }
         def trustAll = application.config.weakssl?.trustAll?:false
