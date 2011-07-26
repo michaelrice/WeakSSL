@@ -1,6 +1,8 @@
 import com.blogspot.hartsock.ssl.weak.GrailsAutoTrustModeSSL
 import org.codehaus.groovy.grails.commons.GrailsApplication
-import com.blogspot.hartsock.ssl.weak.WeakSSLService
+import grails.util.Environment
+import com.blogspot.hartsock.ssl.weak.TrustingProvider
+import com.blogspot.hartsock.ssl.weak.WeakHostnameVerifier
 
 class WeakSSLGrailsPlugin {
     // the plugin version
@@ -11,7 +13,7 @@ class WeakSSLGrailsPlugin {
     def dependsOn = [:]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
-            "grails-app/views/error.gsp"
+            "grails-app"
     ]
 
     // TODO Fill in these fields
@@ -27,28 +29,12 @@ any SSL certificate.
     def documentation = "http://grails.org/plugin/weak-ssl"
 
     def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before 
     }
 
     def doWithSpring = {
-        def trustedHosts = ['localhost']
-        if (application.config.weakssl?.trustedhosts instanceof List) {
-            trustedHosts = application.config.weakssl?.trustedhosts
-        }
-        def autoTrustMode = true
-        if (!application.config.weakssl?.autoTrust) {
-            autoTrustMode = false
-        }
-        def trustAll = application.config.weakssl?.trustAll ?: false
-        weakSSLService(WeakSSLService) {
-            trustedHosts = trustedHosts
-            autoTrustMode = autoTrustMode
-            trustAll = trustAll
-        }
     }
 
     def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
     }
 
     def doWithApplicationContext = { applicationContext ->
@@ -56,9 +42,7 @@ any SSL certificate.
     }
 
     def onChange = { event ->
-        // TODO Implement code that is executed when any artefact that this plugin is
-        // watching is modified and reloaded. The event contains: event.source,
-        // event.application, event.manager, event.ctx, and event.plugin.
+        configSSLMode(application)
     }
 
     def onConfigChange = { event ->
@@ -66,10 +50,23 @@ any SSL certificate.
     }
 
     void configSSLMode(GrailsApplication application) {
+        GrailsAutoTrustModeSSL.init()
         def trustAll = application.config?.trustAll
-        if (trustAll) {
-            GrailsAutoTrustModeSSL.init()
+        if(trustAll == null) {
+            trustAll =  ! Environment.PRODUCTION.equals(Environment.getCurrent())
         }
+        if (trustAll) {
+            if (Environment.PRODUCTION.equals(Environment.getCurrent())) {
+                log.error "You are using the TrustingProvider in PRODUCTION!"
+            }
+            TrustingProvider.registerTrustingProvider()
+        }
+        List hosts = ['localhost']
+        if (application.config.weakssl?.trustedhosts instanceof List) {
+            hosts = application.config.weakssl?.trustedhosts
+        }
+        String[] trustedHostsArray = (String[]) hosts.toArray();
+        WeakHostnameVerifier.init(trustedHostsArray)
     }
 
 }
