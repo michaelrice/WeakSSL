@@ -32,14 +32,14 @@ any SSL certificate.
 
     def doWithSpring = {
         def trustedHosts = ['localhost']
-        if(application.config.weakssl?.trustedhosts instanceof List) {
-            trustedHosts =  application.config.weakssl?.trustedhosts
+        if (application.config.weakssl?.trustedhosts instanceof List) {
+            trustedHosts = application.config.weakssl?.trustedhosts
         }
         def autoTrustMode = true
-        if(!application.config.weakssl?.autoTrust) {
+        if (!application.config.weakssl?.autoTrust) {
             autoTrustMode = false
         }
-        def trustAll = application.config.weakssl?.trustAll?:false
+        def trustAll = application.config.weakssl?.trustAll ?: false
         weakSSLService(WeakSSLService) {
             trustedHosts = trustedHosts
             autoTrustMode = autoTrustMode

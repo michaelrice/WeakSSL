@@ -5,11 +5,11 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
 /**
- *
  * @author Shawn Hartsock
  */
 public class WeakHostnameVerifier implements HostnameVerifier {
     public String[] exemptNames = {"localhost"};
+
     /**
      * @param hostname
      * @param session
@@ -17,9 +17,9 @@ public class WeakHostnameVerifier implements HostnameVerifier {
      */
     public boolean verify(String hostname, SSLSession session) {
         boolean exempt = false;
-        if(exemptNames != null) {
-            for(String name:exemptNames) {
-                if(hostname.toLowerCase().endsWith(name)) {
+        if (exemptNames != null) {
+            for (String name : exemptNames) {
+                if (hostname.toLowerCase().endsWith(name)) {
                     exempt = true;
                 }
             }
@@ -36,15 +36,15 @@ public class WeakHostnameVerifier implements HostnameVerifier {
 
     /**
      * Initialize the HostnameVerifier using the list of exempt host names in System properties.
+     *
      * @param propertyName
      */
     public static void init(String propertyName) throws Exception {
         try {
             String names = System.getProperty(propertyName);
-            if(names != null) {
+            if (names != null) {
                 init(names.split(","));
-            }
-            else {
+            } else {
                 System.out.println("The system property " + propertyName + " was not set");
                 init();
             }
@@ -58,6 +58,7 @@ public class WeakHostnameVerifier implements HostnameVerifier {
     /**
      * Initializes the hostname verifier with your list of arbitrary names that are
      * exempt from SSL certificate double checking.
+     *
      * @param names
      */
     public static void init(String[] names) {

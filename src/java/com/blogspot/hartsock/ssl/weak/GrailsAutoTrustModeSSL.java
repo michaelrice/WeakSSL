@@ -10,7 +10,7 @@ import java.security.Security;
  * Detects the Grails development environment running with a generated keystore and basically turns off SSL
  * certificate validation. All SSL certificates will be trusted if the class detects you have a grails generated
  * SSL keystore in your runtime environment.
- *
+ * <p/>
  * <p>
  * Fixes:
  * sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
@@ -25,7 +25,7 @@ public class GrailsAutoTrustModeSSL {
      * or if we cannot find the associated SSL keystore.
      */
     public static void init() {
-        if( isProduction() || invalidGrailsKeystore() ) {
+        if (isProduction() || invalidGrailsKeystore()) {
             return;
         }
         TrustingProvider.registerTrustingProvider();
@@ -37,9 +37,9 @@ public class GrailsAutoTrustModeSSL {
 
     private static boolean invalidGrailsKeystore() {
         File grailsKeystoreFile = openGrailsKeystore();
-        boolean invalid = (!grailsKeystoreFile.isFile()||!grailsKeystoreFile.canRead());
+        boolean invalid = (!grailsKeystoreFile.isFile() || !grailsKeystoreFile.canRead());
 
-        if(invalid) {
+        if (invalid) {
             System.out.println("Could not read the file " + grailsKeystoreFile.toString());
         }
 
@@ -47,12 +47,12 @@ public class GrailsAutoTrustModeSSL {
     }
 
     /**
+     * @return Grail's SSL Keystore
      * @author Shawn Hartsock
      * <p/>
      * Depends on the system property 'user.home' and on the GrailsUtil.getGrailsVersion() method to
      * properly feed to findGrailsKeystore
      * <p/>
-     * @return Grail's SSL Keystore
      */
     public static File openGrailsKeystore() {
         String userHome = System.getProperty("user.home");
@@ -62,6 +62,9 @@ public class GrailsAutoTrustModeSSL {
     }
 
     /**
+     * @param userHome
+     * @param grailsVersion
+     * @return Grails' SSL Keystore
      * @author Shawn Hartsock
      * <p/>
      * Platform independent Java to find the keystore on the file system.
@@ -70,25 +73,22 @@ public class GrailsAutoTrustModeSSL {
      * <pre>
      *     ~/.grails/$GRAILS_VERSION/ssl/keystore
      * </pre>
-     * @param userHome
-     * @param grailsVersion
-     * @return Grails' SSL Keystore
      */
     public static File findGrailsKeystore(String userHome, String grailsVersion) {
         return new File(
-                    new File(
-                            new File(
-                                    new File(
-                                            new File(
-                                                    userHome
-                                            ),
-                                            ".grails"
-                                    ),
-                                    grailsVersion
-                            ),
-                            "ssl"
-                    ),
-                    "keystore"
-            );
+                new File(
+                        new File(
+                                new File(
+                                        new File(
+                                                userHome
+                                        ),
+                                        ".grails"
+                                ),
+                                grailsVersion
+                        ),
+                        "ssl"
+                ),
+                "keystore"
+        );
     }
 }

@@ -13,7 +13,7 @@ class WeakSSLService implements InitializingBean {
         initializeTrustedHosts()
 
         if (trustAll) {
-            if(Environment.PRODUCTION.equals(Environment.getCurrent())) {
+            if (Environment.PRODUCTION.equals(Environment.getCurrent())) {
                 log.error "You are using the TrustingProvider in PRODUCTION!"
             }
             TrustingProvider.registerTrustingProvider()
