@@ -2,9 +2,11 @@ package com.blogspot.hartsock.ssl.weak;
 
 import grails.util.Environment;
 import grails.util.GrailsUtil;
+import grails.util.Metadata;
 
 import java.io.File;
 import java.security.Security;
+import java.util.regex.Pattern;
 
 /**
  * Detects the Grails development environment running with a generated keystore and basically turns off SSL
@@ -19,6 +21,9 @@ import java.security.Security;
  * @author Shawn Hartsock
  */
 public class GrailsAutoTrustModeSSL {
+
+    private static final Pattern V13X = Pattern.compile("1.3.\\d+?");
+    private static final Pattern V2X = Pattern.compile("2.[01].\\d+?");
 
     /**
      * Will not register the trusting provider if the system is in production
@@ -37,10 +42,10 @@ public class GrailsAutoTrustModeSSL {
 
     private static boolean invalidGrailsKeystore() {
         File grailsKeystoreFile = openGrailsKeystore();
-        boolean invalid = (!grailsKeystoreFile.isFile() || !grailsKeystoreFile.canRead());
+        boolean invalid = (grailsKeystoreFile == null || !grailsKeystoreFile.isFile() || !grailsKeystoreFile.canRead());
 
         if (invalid) {
-            System.out.println("Could not read the file " + grailsKeystoreFile.toString());
+            System.out.println("Could not read the file " + grailsKeystoreFile);
         }
 
         return invalid;
@@ -75,20 +80,33 @@ public class GrailsAutoTrustModeSSL {
      * </pre>
      */
     public static File findGrailsKeystore(String userHome, String grailsVersion) {
-        return new File(
+        File baseDir = new File(new File(userHome, ".grails"), grailsVersion);
+        if (V13X.matcher(grailsVersion).find()) {
+            return
                 new File(
+                    new File(
+                        baseDir,
+                        "ssl"
+                    ),
+                    "keystore"
+                );
+        } else if (V2X.matcher(grailsVersion).find()) {
+            return
+                new File(
+                    new File(
                         new File(
-                                new File(
-                                        new File(
-                                                userHome
-                                        ),
-                                        ".grails"
-                                ),
-                                grailsVersion
+                            new File(
+                                baseDir,
+                                "projects"
+                            ),
+                            Metadata.getCurrent().getApplicationName()
                         ),
                         "ssl"
-                ),
-                "keystore"
-        );
+                    ),
+                    "keystore"
+                );
+        }
+        return null;
     }
+
 }
