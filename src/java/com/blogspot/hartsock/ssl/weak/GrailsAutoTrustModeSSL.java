@@ -81,7 +81,6 @@ public class GrailsAutoTrustModeSSL {
      */
     public static File findGrailsKeystore(String userHome, String grailsVersion) {
         File baseDir = new File(new File(userHome, ".grails"), grailsVersion);
-        File keystore = null;
         if (V13X.matcher(grailsVersion).find()) {
             return
                 new File(
@@ -107,7 +106,7 @@ public class GrailsAutoTrustModeSSL {
                     "keystore"
                 );
         }
-        return keystore;
+        return null;
     }
 
 }
