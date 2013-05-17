@@ -23,7 +23,8 @@ import java.util.regex.Pattern;
 public class GrailsAutoTrustModeSSL {
 
     private static final Pattern V13X = Pattern.compile("1.3.\\d+?");
-    private static final Pattern V2X = Pattern.compile("2.[01].\\d+?");
+    //Pattern used for Grails version 2.x.x
+    private static final Pattern V2X = Pattern.compile("2.\\d.\\d+?");
 
     /**
      * Will not register the trusting provider if the system is in production
