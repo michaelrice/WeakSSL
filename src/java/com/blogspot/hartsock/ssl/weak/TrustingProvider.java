@@ -19,7 +19,7 @@ public class TrustingProvider extends Provider {
                 TrustingTrustManagerFactory.class.getName());
     }
 
-    protected static class TrustingTrustManagerFactory
+    public static class TrustingTrustManagerFactory
             extends TrustManagerFactorySpi {
         public TrustingTrustManagerFactory() {
         }
