@@ -7,6 +7,7 @@ import grails.util.Metadata;
 import java.io.File;
 import java.security.Security;
 import java.util.regex.Pattern;
+import org.apache.log4j.Logger;
 
 /**
  * Detects the Grails development environment running with a generated keystore and basically turns off SSL
@@ -25,13 +26,17 @@ public class GrailsAutoTrustModeSSL {
     private static final Pattern V13X = Pattern.compile("1.3.\\d+?");
     //Pattern used for Grails version 2.x.x
     private static final Pattern V2X = Pattern.compile("2.\\d.\\d+?");
+    private static Logger log = Logger.getLogger(GrailsAutoTrustModeSSL.class);
 
     /**
      * Will not register the trusting provider if the system is in production
      * or if we cannot find the associated SSL keystore.
      */
     public static void init() {
+        log.trace("Initializing GrailsAutoTrustModeSSL");
         if (isProduction() || invalidGrailsKeystore()) {
+            log.trace("AutoTrust isProduction: " + isProduction());
+            log.trace("AutoTrust invalidGrailsKeystore: " + invalidGrailsKeystore());
             return;
         }
         TrustingProvider.registerTrustingProvider();
@@ -81,6 +86,7 @@ public class GrailsAutoTrustModeSSL {
      * </pre>
      */
     public static File findGrailsKeystore(String userHome, String grailsVersion) {
+        log.trace("Looking for grails keystore");
         File baseDir = new File(new File(userHome, ".grails"), grailsVersion);
         if (V13X.matcher(grailsVersion).find()) {
             return
