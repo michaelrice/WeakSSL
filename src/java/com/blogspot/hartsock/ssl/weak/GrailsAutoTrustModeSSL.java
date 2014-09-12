@@ -51,7 +51,7 @@ public class GrailsAutoTrustModeSSL {
         boolean invalid = (grailsKeystoreFile == null || !grailsKeystoreFile.isFile() || !grailsKeystoreFile.canRead());
 
         if (invalid) {
-            System.out.println("Could not read the file " + grailsKeystoreFile);
+            log.error("Could not read the file " + grailsKeystoreFile);
         }
 
         return invalid;

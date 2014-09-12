@@ -5,6 +5,7 @@ import com.blogspot.hartsock.ssl.weak.TrustingProvider
 import com.blogspot.hartsock.ssl.weak.WeakHostnameVerifier
 
 class WeakSSLGrailsPlugin {
+
     // the plugin version
     def version = "1.3"
     // the version or versions of Grails the plugin is designed for
@@ -16,7 +17,6 @@ class WeakSSLGrailsPlugin {
             "grails-app"
     ]
 
-    // TODO Fill in these fields
     def author = "Shawn Hartsock"
     def authorEmail = "hartsock@acm.org"
     def title = "WeakSSL"
@@ -25,6 +25,12 @@ This plugin deliberately breaks SSL for you by accepting
 any SSL certificate.
 '''
 
+    def developers = [
+        [
+            name: "Michael Rice",
+            email: "michael@michaelrice.org"
+        ]
+    ]
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/weak-ssl"
 
@@ -52,12 +58,13 @@ any SSL certificate.
     void configSSLMode(GrailsApplication application) {
         GrailsAutoTrustModeSSL.init()
         def trustAll = application.config?.trustAll
-        if(trustAll == null) {
+        if(trustAll instanceof ConfigObject || trustAll == null) {
+            log.trace "trustAll not set. If Environment not production setting trustAll = true"
             trustAll =  ! Environment.PRODUCTION.equals(Environment.getCurrent())
         }
         if (trustAll) {
             if (Environment.PRODUCTION.equals(Environment.getCurrent())) {
-                log.error "You are using the TrustingProvider in PRODUCTION!"
+                log.warn "You are using the TrustingProvider in PRODUCTION!"
             }
             TrustingProvider.registerTrustingProvider()
         }
