@@ -16,8 +16,4 @@ before_install:
 - gvm install grails $GRAILS_VERSION || true
 - chmod 775 ./build.sh
 
-branches:
-only:
-- development
-
 script: ./build.sh
