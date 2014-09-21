@@ -37,3 +37,5 @@ web-app/WEB-INF/applicationContext.xml
 web-app/WEB-INF/sitemesh.xml
 
 .DS_Store
+
+plugin.xml
