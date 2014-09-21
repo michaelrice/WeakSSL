@@ -1,5 +1,5 @@
-![https://travis-ci.org/michaelrice/WeakSSL](https://travis-ci.org/michaelrice/WeakSSL.svg "WeakSSL Build Status")
-# grails-weal-ssl
+[![Build Status](https://travis-ci.org/michaelrice/WeakSSL.svg)](https://travis-ci.org/michaelrice/WeakSSL)
+# grails-weak-ssl
 
 This plugin will deliberately break the Java SSL security model.
 It is useful for working in development environments or test
