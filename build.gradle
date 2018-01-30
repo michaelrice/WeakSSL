@@ -60,17 +60,30 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
 }
+
+// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
 grailsPublish {
-    // TODO: Provide values here
-    user = 'user'
-    key = 'key'
-    githubSlug = 'foo/bar'
+    githubSlug = 'michaelrice/WeakSSL'
     license {
         name = 'Apache-2.0'
     }
-    title = "My Plugin"
-    desc = "Full plugin description"
-    developers = [johndoe: "John Doe"]
-    portalUser = ""
-    portalPassword = ""
+    title = "WeakSSL"
+    desc = '''\\
+This plugin deliberately breaks SSL for you by accepting
+any SSL certificate.
+'''
+    developers = [shawnhartsock: "Shawn Hartsock", michaelrice: "Michael Rice", sachinverma: "Sachin Verma"]
+}
+
+bintray {
+    pkg {
+        name = "$project.name"
+        issueTrackerUrl = "https://github.com/michaelrice/$project.name/issues"
+        vcsUrl = "https://github.com/michaelrice/$project.name"
+        version {
+            attributes = ['grails-plugin': "$project.group:$project.name"]
+            name = project.version
+        }
+    }
 }

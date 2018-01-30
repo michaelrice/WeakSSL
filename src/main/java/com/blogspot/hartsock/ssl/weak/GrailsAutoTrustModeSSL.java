@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
  * Detects the Grails development environment running with a generated keystore and basically turns off SSL
  * certificate validation. All SSL certificates will be trusted if the class detects you have a grails generated
  * SSL keystore in your runtime environment.
- * <p/>
  * <p>
  * Fixes:
  * sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
@@ -57,10 +56,10 @@ public class GrailsAutoTrustModeSSL {
     /**
      * @return Grail's SSL Keystore
      * @author Shawn Hartsock
-     * <p/>
+     * <p>
      * Depends on the system property 'user.home' and on the GrailsUtil.getGrailsVersion() method to
      * properly feed to findGrailsKeystore
-     * <p/>
+     * </p>
      */
     public static File openGrailsKeystore() {
         String userHome = System.getProperty("user.home");
@@ -74,12 +73,14 @@ public class GrailsAutoTrustModeSSL {
      * @param grailsVersion
      * @return Grails' SSL Keystore
      * @author Shawn Hartsock
-     * <p/>
+     * <p>
      * Platform independent Java to find the keystore on the file system.
      * Depends on the keystore being found at:
-     * <p/>
+     * </p>
      * <pre>
+     *     <code>
      *     ~/.grails/$GRAILS_VERSION/ssl/keystore
+     *     </code>
      * </pre>
      */
     public static File findGrailsKeystore(String userHome, String grailsVersion) {
