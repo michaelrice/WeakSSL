@@ -3,17 +3,15 @@ package com.blogspot.hartsock.ssl.weak;
 import grails.util.Environment;
 import grails.util.GrailsUtil;
 import grails.util.Metadata;
+import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.security.Security;
 import java.util.regex.Pattern;
-import org.apache.log4j.Logger;
 
 /**
  * Detects the Grails development environment running with a generated keystore and basically turns off SSL
  * certificate validation. All SSL certificates will be trusted if the class detects you have a grails generated
  * SSL keystore in your runtime environment.
- * <p/>
  * <p>
  * Fixes:
  * sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
@@ -23,9 +21,7 @@ import org.apache.log4j.Logger;
  */
 public class GrailsAutoTrustModeSSL {
 
-    private static final Pattern V13X = Pattern.compile("1.3.\\d+?");
-    //Pattern used for Grails version 2.x.x
-    private static final Pattern V2X = Pattern.compile("2.\\d.\\d+?");
+    private static final Pattern V3X = Pattern.compile("3.\\d.\\d+?");
     private static Logger log = Logger.getLogger(GrailsAutoTrustModeSSL.class);
 
     /**
@@ -60,10 +56,10 @@ public class GrailsAutoTrustModeSSL {
     /**
      * @return Grail's SSL Keystore
      * @author Shawn Hartsock
-     * <p/>
+     * <p>
      * Depends on the system property 'user.home' and on the GrailsUtil.getGrailsVersion() method to
      * properly feed to findGrailsKeystore
-     * <p/>
+     * </p>
      */
     public static File openGrailsKeystore() {
         String userHome = System.getProperty("user.home");
@@ -77,41 +73,34 @@ public class GrailsAutoTrustModeSSL {
      * @param grailsVersion
      * @return Grails' SSL Keystore
      * @author Shawn Hartsock
-     * <p/>
+     * <p>
      * Platform independent Java to find the keystore on the file system.
      * Depends on the keystore being found at:
-     * <p/>
+     * </p>
      * <pre>
+     *     <code>
      *     ~/.grails/$GRAILS_VERSION/ssl/keystore
+     *     </code>
      * </pre>
      */
     public static File findGrailsKeystore(String userHome, String grailsVersion) {
         log.trace("Looking for grails keystore");
         File baseDir = new File(new File(userHome, ".grails"), grailsVersion);
-        if (V13X.matcher(grailsVersion).find()) {
+        if (V3X.matcher(grailsVersion).find()) {
             return
-                new File(
                     new File(
-                        baseDir,
-                        "ssl"
-                    ),
-                    "keystore"
-                );
-        } else if (V2X.matcher(grailsVersion).find()) {
-            return
-                new File(
-                    new File(
-                        new File(
                             new File(
-                                baseDir,
-                                "projects"
+                                    new File(
+                                            new File(
+                                                    baseDir,
+                                                    "projects"
+                                            ),
+                                            Metadata.getCurrent().getApplicationName()
+                                    ),
+                                    "ssl"
                             ),
-                            Metadata.getCurrent().getApplicationName()
-                        ),
-                        "ssl"
-                    ),
-                    "keystore"
-                );
+                            "keystore"
+                    );
         }
         return null;
     }

@@ -14,4 +14,5 @@ Submit issues to the [GitHub Issue Tracker](https://github.com/michaelrice/WeakS
 
 ## Authors
 * Shawn Hartsock -- Creator
-* Michael Rice -- Current Maintainer
+* Michael Rice -- Maintainer for grails 2.X
+* Sachin Verma -- Maintainer for grails 3.x

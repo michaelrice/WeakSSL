@@ -1,19 +1,19 @@
 language: java
 
 jdk:
-- oraclejdk7
+- oraclejdk8
 
 env:
-- GRAILS_VERSION=2.2.5 UPGRADE=upgrade
+- GRAILS_VERSION=3.1.1 UPGRADE=upgrade
 
 before_install:
-- rm -rf ~/.gvm
-- curl -s get.gvmtool.net > ~/install_gvm.sh
-- chmod 775 ~/install_gvm.sh
-- ~/install_gvm.sh
-- echo "gvm_auto_answer=true" > ~/.gvm/etc/config
-- source ~/.gvm/bin/gvm-init.sh
-- gvm install grails $GRAILS_VERSION || true
+- rm -rf ~/.sdkman
+- curl -s "https://get.sdkman.io" > ~/install_sdk.sh
+- chmod 775 ~/install_sdk.sh
+- ~/install_sdk.sh
+- echo sdkman_auto_answer=true > ~/.sdkman/etc/config
+- source ~/.sdkman/bin/sdkman-init.sh
+- sdk install grails $GRAILS_VERSION || true
 - chmod 775 ./build.sh
 
 script: ./build.sh
